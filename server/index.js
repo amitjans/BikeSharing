@@ -14,7 +14,7 @@ app.use(express.json());
 //Rutas
 app.use('/api/estacion', require('./routes/estacion.routes'));
 app.use('/api/bicicleta', require('./routes/bicicleta.routes'));
-app.use('/api/login', require('./routes/usuario.routes'));
+app.use('/api/usuario', require('./routes/usuario.routes'));
 
 //Servidor
 app.listen(app.get('port'), () => {

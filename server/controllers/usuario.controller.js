@@ -1,11 +1,11 @@
 const usuario = require('../models/usuario');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const usuariocontroller = {};
 
-usuariocontroller.singup = async (req, res, next) => {
-
+usuariocontroller.singup = (req, res) => {
     bcrypt.genSalt(10, function (err, salt) {
-        bcrypt.hash(req.body.contrasena, salt, function (err, hash) {
+        bcrypt.hash(req.body.contrasena, salt, async function (err, hash) {
             if(err){
                 res.status(500).json({
                     status: err
@@ -24,24 +24,40 @@ usuariocontroller.singup = async (req, res, next) => {
     });
 }
 
-usuariocontroller.singin = (req, res, next) => {
-    usuario.findOne({ usuario: req.body.usuario }, function (err, user) {
+usuariocontroller.singin = (req, res) => {
+    usuario.findOne({ correo: req.body.correo }, function (err, user) {
         bcrypt.compare(req.body.contrasena, user.contrasena, function(err, result) {
             if(result){
-
+                const token = jwt.sign({user}, 'secret_key');
+                res.status(200).json({
+                    status: true,
+                    menssage: 'Usuario Autenticado',
+                    token: token,
+                    details: 'Usuario Autenticado Correctamente'
+                });
             } else {
                 res.status(403).json({
                     status: false,
-                    menssage: 'Credenciales incorrectas'
+                    menssage: 'Credenciales incorrectas',
+                    token: '',
+                    details: err
                 });
             }
         });
     });
 }
 
-usuariocontroller.getList = async (req, res, next) => {
-    const usuarioes = await usuario.find();
-    res.json(usuarioes);
+usuariocontroller.getList = (req, res) => {
+    jwt.verify(req.token, 'secret_key', async (err, data) => {
+        if (err) {
+            res.status(403).json({
+                error: err
+            });
+        } else {
+            const usuarios = await usuario.find();
+            res.json(usuarios);
+        }
+    });
 }
 
 usuariocontroller.details = async (req, res) => {
