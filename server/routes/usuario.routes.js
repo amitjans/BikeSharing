@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const jwtoken = require('../middlewares/token');
+const jwtoken = require('../common/token');
 
 const usuario = require('../controllers/usuario.controller');
 

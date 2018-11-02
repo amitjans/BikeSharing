@@ -14,6 +14,8 @@ app.use(express.json());
 //Rutas
 app.use('/api/estacion', require('./routes/estacion.routes'));
 app.use('/api/bicicleta', require('./routes/bicicleta.routes'));
+app.use('/api/bicitaxi', require('./routes/bicitaxi.routes'));
+app.use('/api/recorridobici', require('./routes/recorridobici.routes'));
 app.use('/api/usuario', require('./routes/usuario.routes'));
 
 //Servidor

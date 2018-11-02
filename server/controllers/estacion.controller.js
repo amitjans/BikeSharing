@@ -21,15 +21,7 @@ estacioncontroller.create = async (req, res) => {
 
 estacioncontroller.edit = async (req, res) => {
     const { id } = req.params;
-    const estacion = {
-        nombre: req.body.nombre,
-        muelles: req.body.muelles,
-        direccion: req.body.direccion,
-        lon: req.body.lon,
-        lat: req.body.lat,
-        estado: req.body.estado
-    }
-    await Estacion.findByIdAndUpdate(id, { $set: estacion }, { new: true });
+    await Estacion.findByIdAndUpdate(id, { $set: req.body }, { new: true });
     res.json({
         status: 'Estacion actualizada'
     });

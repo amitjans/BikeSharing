@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const BicicletaSchema = new Schema({
+const BicitaxiSchema = new Schema({
     id_estacion: { type: String, require: true },
     tipo: { type: String, required: true },
     tamano: { type: Number, required: true },
@@ -9,4 +9,4 @@ const BicicletaSchema = new Schema({
     estado: { type: Boolean, default: true }
 })
 
-module.exports = mongoose.model('bicicleta', BicicletaSchema);
+module.exports = mongoose.model('bicitaxi', BicitaxiSchema);
