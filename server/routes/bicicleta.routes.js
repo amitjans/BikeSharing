@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const jwtoken = require('../common/token');
 
-router.get('/', (req, res) => {
-    res.json({
-        status: 'Api works'
-    });
-})
+const bicitaxi = require('../controllers/bicitaxi.controller');
+
+router.get('/', bicitaxi.getList);
+router.get('/:id', bicitaxi.details);
+router.post('/', bicitaxi.create);
+router.put('/:id', bicitaxi.edit);
+router.delete('/:id', bicitaxi.delete);
 
 module.exports = router;
