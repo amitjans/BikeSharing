@@ -4,10 +4,10 @@ const jwtoken = require('../common/token');
 
 const bicitaxi = require('../controllers/bicitaxi.controller');
 
-router.get('/', bicitaxi.getList);
-router.get('/:id', bicitaxi.details);
-router.post('/', bicitaxi.create);
-router.put('/:id', bicitaxi.edit);
-router.delete('/:id', bicitaxi.delete);
+router.get('/', jwtoken.ensureToken, bicitaxi.getList);
+router.get('/:id', jwtoken.ensureToken, bicitaxi.details);
+router.post('/', jwtoken.ensureToken, bicitaxi.create);
+router.put('/:id', jwtoken.ensureToken, bicitaxi.edit);
+router.delete('/:id', jwtoken.ensureToken, bicitaxi.delete);
 
 module.exports = router;

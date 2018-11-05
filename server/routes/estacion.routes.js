@@ -4,10 +4,10 @@ const jwtoken = require('../common/token');
 
 const estacion = require('../controllers/estacion.controller');
 
-router.get('/', estacion.getList);
-router.get('/:id', estacion.details);
-router.post('/', estacion.create);
-router.put('/:id', estacion.edit);
-router.delete('/:id', estacion.delete);
+router.get('/', jwtoken.ensureToken, estacion.getList);
+router.get('/:id', jwtoken.ensureToken, estacion.details);
+router.post('/', jwtoken.ensureToken, estacion.create);
+router.put('/:id', jwtoken.ensureToken, estacion.edit);
+router.delete('/:id', jwtoken.ensureToken, estacion.delete);
 
 module.exports = router;

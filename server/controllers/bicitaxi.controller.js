@@ -1,4 +1,5 @@
 const bicitaxi = require('../models/bicitaxi');
+const jwt = require('jsonwebtoken');
 const bicitaxicontroller = {};
 
 bicitaxicontroller.getList = async (req, res) => {
