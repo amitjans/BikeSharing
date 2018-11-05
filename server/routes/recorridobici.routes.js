@@ -4,10 +4,10 @@ const jwtoken = require('../common/token');
 
 const recorridobici = require('../controllers/recorridobici.controller');
 
-router.get('/', recorridobici.getList);
-router.get('/:id', recorridobici.details);
-router.post('/', recorridobici.create);
-router.put('/:id', recorridobici.edit);
-router.delete('/:id', recorridobici.delete);
+router.get('/', jwtoken.ensureToken, recorridobici.getList);
+router.get('/:id', jwtoken.ensureToken, recorridobici.details);
+router.post('/', jwtoken.ensureToken, recorridobici.create);
+router.put('/:id', jwtoken.ensureToken, recorridobici.edit);
+router.delete('/:id', jwtoken.ensureToken, recorridobici.delete);
 
 module.exports = router;

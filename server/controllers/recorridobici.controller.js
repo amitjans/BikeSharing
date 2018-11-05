@@ -1,4 +1,5 @@
 const recorridobici = require('../models/recorridobici');
+const jwt = require('jsonwebtoken');
 const recorridobicicontroller = {};
 
 recorridobicicontroller.getList = async (req, res) => {
