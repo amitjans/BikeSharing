@@ -5,7 +5,6 @@ jwtoken.ensureToken = (req, res, next) => {
     if (typeof bearerToken !== 'undefined') {
         const split = bearerToken.split(" ");
         req.token = split[1];
-        console.log(req.token);
         next();
     } else {
         res.status(403).json();

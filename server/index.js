@@ -24,6 +24,7 @@ app.get('/', function(req, res) {
 });
 app.use('/api/estacion', require('./routes/estacion.routes'));
 app.use('/api/bicicleta', require('./routes/bicicleta.routes'));
+app.use('/api/tipobici', require('./routes/tipobici.routes'));
 app.use('/api/bicitaxi', require('./routes/bicitaxi.routes'));
 app.use('/api/recorridobici', require('./routes/recorridobici.routes'));
 app.use('/api/usuario', require('./routes/usuario.routes'));

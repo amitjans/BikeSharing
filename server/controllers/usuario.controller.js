@@ -25,20 +25,20 @@ usuariocontroller.singup = (req, res) => {
 }
 
 usuariocontroller.singin = (req, res) => {
-    usuario.findOne({ correo: req.body.correo }, function (err, user) {
+    usuario.findOne({ correo: req.body.correo }, function (err, usuario) {
         if (err) {
             res.status(500).json({
                 status: err
             });
-        } else if(user === null) {
+        } else if(usuario === null) {
             res.status(200).json({
                 status: 'Usuario invalido'
             });
         } else {
-            bcrypt.compare(req.body.contrasena, user.contrasena, function (err, result) {
+            bcrypt.compare(req.body.contrasena, usuario.contrasena, function (err, result) {
                 if (result) {
                     const token = jwt.sign({
-                        user
+                        usuario
                     }, 'secret_key');
                     res.status(200).json({
                         status: true,
@@ -96,17 +96,17 @@ usuariocontroller.edit = (req, res) => {
         if (err) {
             res.status(403).json({ error: err });
         } else {
-            if (data.rol === 'admin' || data.id === req.params.id) {
+            if (data.usuario.rol === 'admin' || data.id === req.params.id) {
                 const { id } = req.params;
-                const usuario = {
-                    usuario: req.body.usuario,
-                    contrasena: req.body.contrasena,
-                    rol: req.body.rol,
-                    puntos: req.body.puntos
-                }
-                await usuario.findByIdAndUpdate(id, { $set: usuario }, { new: true });
-                res.status(200).json({
-                    status: 'Usuario actualizado'
+                await usuario.findByIdAndUpdate(id, { $set: req.body }, { new: true }).then((result) => {
+                    res.status(200).json({
+                        status: 'Usuario actualizado'
+                    }); 
+                }).catch((err) => {
+                    res.status(500).json({
+                        status: 'Error interno',
+                        error: err
+                    });
                 });
             } else {
                 res.status(403).json({
