@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const jwtoken = require('../common/token');
 
-const bicitaxi = require('../controllers/bicitaxi.controller');
+const bicicleta = require('../controllers/bicicleta.controller');
 
-router.get('/', jwtoken.ensureToken, bicitaxi.getList);
-router.get('/:id', jwtoken.ensureToken, bicitaxi.details);
-router.post('/', jwtoken.ensureToken, bicitaxi.create);
-router.put('/:id', jwtoken.ensureToken, bicitaxi.edit);
-router.delete('/:id', jwtoken.ensureToken, bicitaxi.delete);
+router.get('/', jwtoken.ensureToken, bicicleta.getList);
+router.get('/:id', jwtoken.ensureToken, bicicleta.details);
+router.post('/', jwtoken.ensureToken, bicicleta.create);
+router.put('/:id', jwtoken.ensureToken, bicicleta.edit);
+router.delete('/:id', jwtoken.ensureToken, bicicleta.delete);
 
 module.exports = router;

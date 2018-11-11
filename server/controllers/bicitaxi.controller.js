@@ -13,18 +13,60 @@ bicitaxicontroller.details = async (req, res) => {
 }
 
 bicitaxicontroller.create = async (req, res) => {
-    const bicitaxi = new bicitaxi(req.body);
-    await bicitaxi.save();
-    res.status(200).json({
-        status: 'Bicitaxi guardado'
+    jwt.verify(req.token, 'secret_key', async (err, data) => {
+        if (err) {
+            res.status(403).json({
+                error: err
+            });
+        } else {
+            if (data.usuario.rol === 'admin') {
+                const nuevobicitaxi = new bicitaxi(req.body);
+                nuevobicitaxi.id_usuario = data.usuario._id
+                await nuevobicitaxi.save().then((result) => {
+                    res.status(200).json({
+                        status: 'Estacion guardada'
+                    });
+                }).catch((err) => {
+                    res.status(500).json({
+                        status: 'Error interno',
+                        error: err
+                    });
+                });
+            } else {
+                res.status(403).json({
+                    error: 'Usuario no autorizado a realizar este cambio'
+                });
+            }
+        }
     });
 }
 
 bicitaxicontroller.edit = async (req, res) => {
-    const { id } = req.params;
-    await bicitaxi.findByIdAndUpdate(id, { $set: req.body }, { new: true });
-    res.status(200).json({
-        status: 'Bicitaxi actualizado'
+    jwt.verify(req.token, 'secret_key', async (err, data) => {
+        if (err) {
+            res.status(403).json({
+                error: err
+            });
+        } else {
+            var temp = await bicitaxi.findById(req.params.id);
+            if (data.usuario.rol === 'admin' || data.usuario._id === temp.id_usuario) {
+                    const { id } = req.params;
+                    await bicitaxi.findByIdAndUpdate(id, { $set: req.body }, { new: true }).then((result) => {
+                    res.status(200).json({
+                        status: 'Bicitaxi actualizado'
+                    });
+                }).catch((err) => {
+                    res.status(500).json({
+                        status: 'Error interno',
+                        error: err
+                    });
+                });
+            } else {
+                res.status(403).json({
+                    error: 'Usuario no autorizado a realizar este cambio'
+                });
+            }
+        }
     });
 }
 

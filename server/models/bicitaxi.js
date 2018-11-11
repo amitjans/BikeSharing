@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const BicitaxiSchema = new Schema({
-    id_estacion: { type: String, require: true },
+    id_usuario: { type: String, required: true },
     chofer: { type: String, required: true },
     capacidad: { type: Number, required: true },
-    rentada: { type: Boolean, default: false },
+    disponible: { type: Boolean, default: false },
     estado: { type: Boolean, default: true }
 })
 
