@@ -1,0 +1,58 @@
+<div class="container" ng-controller="usuarios">
+    <div class="lc-block toggled" id="l-login">
+        <div ng-show="option == 0">
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" placeholder="Correo" ng-model="correo">
+                </div>
+            </div>
+            
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+                <div class="fg-line">
+                    <input type="password" class="form-control" placeholder="Password" ng-model="contrasena">
+                </div>
+            </div>
+            
+            <div class="clearfix"></div>
+            
+            <span class="btn btn-login btn-danger btn-float" ng-click="singin()"><i class="zmdi zmdi-arrow-forward"></i></span>
+        </div>
+
+        <div ng-show="option == 1">
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" placeholder="Email Address" ng-model="correo">
+                </div>
+            </div>
+            
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+                <div class="fg-line">
+                    <input type="password" class="form-control" placeholder="Contrasena" ng-model="contrasena">
+                </div>
+            </div>
+    
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+                <div class="fg-line">
+                    <input type="password" class="form-control" placeholder="Confirmar Contrasena" ng-model="contrasena2">
+                </div>
+            </div>
+            
+            <div class="clearfix"></div>
+            
+            <span class="btn btn-login btn-danger btn-float" ng-click="singup()"><i class="zmdi zmdi-arrow-forward"></i></span>
+        </div>
+
+        <span class="row">
+                <i class="bgm-red col-md-4" style="border-radius: 10px; cursor: pointer; color: white" ng-click="options(1)">Registrarse</i>
+                <div class="col-md-3"></div>
+                <i class="bgm-red col-md-4" style="border-radius: 10px; cursor: pointer; color: white" ng-click="options(0)">Iniciar secci&oacute;n</i>
+            </span>
+    </div>
+
+    
+</div>

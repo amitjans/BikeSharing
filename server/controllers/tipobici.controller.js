@@ -3,13 +3,18 @@ const jwt = require('jsonwebtoken');
 const tipobicicontroller = {};
 
 tipobicicontroller.getList = async (req, res) => {
-    const tipobicis = await tipobici.find();
+    const tipobicis = await tipobici.find({ estado: true});
     res.status(200).json(tipobicis);
 }
 
 tipobicicontroller.details = async (req, res) => {
     const tipobici = await tipobici.findById(req.params.id);
     res.status(200).json(tipobici);
+}
+
+tipobicicontroller.bicicletas = async (req, res) => {
+    const list = await tipobici.findById(req.params.id).populate('bicicletas');
+    res.status(200).json(list.bicicletas);
 }
 
 tipobicicontroller.create = async (req, res) => {
@@ -45,7 +50,7 @@ tipobicicontroller.edit = async (req, res) => {
             console.log(data);
             if (data.usuario.rol === 'admin') {
                 const { id } = req.params;
-                await tipobici.findByIdAndUpdate(id, { $set: req.body }, { new: true }).save();
+                await tipobici.findByIdAndUpdate(id, { $set: req.body }, { new: true });
                 res.status(200).json({
                     status: 'tipobici guardado'
                 });
@@ -62,14 +67,11 @@ tipobicicontroller.delete = async (req, res) => {
     const {
         id
     } = req.params;
-    const tipobici = {
-        estado: false
-    }
     await tipobici.findByIdAndUpdate(id, {
-        $set: tipobici
+        $set: { estado: false }
     });
     res.status(200).json({
-        status: 'tipobici eliminado'
+        mensaje: 'Tipo de bicicleta eliminado'
     });
 }
 

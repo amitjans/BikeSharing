@@ -1,15 +1,12 @@
 const bicicleta = require('../models/bicicleta');
+const estacion = require('../models/estacion');
+const tipobici = require('../models/tipobici');
 const jwt = require('jsonwebtoken');
 const bicicletacontroller = {};
 
-bicicletacontroller.getList = async (req, res) => res.status(200).json(!!req.query.estacion ? await bicicleta.find({
-    id_estacion: req.query.estacion
-}) : await bicicleta.find());
+bicicletacontroller.getList = async (req, res) => res.status(200).json(await bicicleta.find({ estado: true }).populate('estacion tipo'));
 
-bicicletacontroller.details = async (req, res) => {
-    const bicicleta = await bicicleta.findById(req.params.id);
-    res.status(200).json(bicicleta);
-}
+bicicletacontroller.details = async (req, res) => res.status(200).json(await bicicleta.findById(req.params.id).populate('estacion tipo'));
 
 bicicletacontroller.create = async (req, res) => {
     jwt.verify(req.token, 'secret_key', async (err, data) => {
@@ -19,16 +16,22 @@ bicicletacontroller.create = async (req, res) => {
             });
         } else {
             if (data.usuario.rol === 'admin') {
-                const nuevabicicleta = new bicicleta(req.body);
-                await nuevabicicleta.save().then((result) => {
-                    res.status(200).json({
-                        status: 'Bicicleta guardada'
-                    });
-                }).catch((err) => {
-                    res.status(500).json({
-                        status: 'Error interno',
-                        error: err
-                    });
+                const temp = await estacion.findById(req.body.estacion);
+                const tipo = await tipobici.findById(req.body.tipo);
+                ;
+                cant = (!!req.query.cant) ? req.query.cant : 1;
+                var numero = req.body.numero;
+                for (let i = 0; i < cant; i++) {
+                    const obj = new bicicleta(req.body)
+                    obj.numero = numero + i;
+                    await obj.save();
+                    temp.bicicletas.push(obj);
+                    await temp.save();
+                    tipo.bicicletas.push(obj);
+                    await tipo.save();
+                }
+                res.status(201).json({
+                    status: 'Bicicleta guardada'
                 });
             } else {
                 res.status(403).json({
@@ -40,31 +43,49 @@ bicicletacontroller.create = async (req, res) => {
 }
 
 bicicletacontroller.edit = async (req, res) => {
-    const {
-        id
-    } = req.params;
-    await bicicleta.findByIdAndUpdate(id, {
-        $set: req.body
-    }, {
-        new: true
-    });
-    res.status(200).json({
-        status: 'Bicicleta actualizada'
+    jwt.verify(req.token, 'secret_key', async (err, data) => {
+        if (err) {
+            res.status(403).json({
+                error: err
+            });
+        } else {
+            if (data.usuario.rol === 'admin') {
+                const { id } = req.params;
+
+                var temp = await bicicleta.findById(id);
+
+                if (temp.tipo !== req.body.tipo) {
+                    var tipo = await tipobici.findById(temp.tipo);
+                    tipo.bicicletas.splice(tipo.bicicletas.indexOf(temp.tipo), 1);
+                    await tipo.save();
+                }
+
+                if (temp.estacion !== req.body.estacion) {
+                    var est = await estacion.findById(temp.estacion);
+                    est.bicicletas.splice(est.bicicletas.indexOf(temp.estacion), 1);
+                    await est.save();
+                }
+
+                var obj = await bicicleta.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+                const newest = await estacion.findById(req.body.estacion);
+                const newtipo = await tipobici.findById(req.body.tipo);
+                newest.bicicletas.push(obj);
+                await newest.save();
+                newtipo.bicicletas.push(obj);
+                await newtipo.save();
+                res.status(200).json({
+                    status: 'Bicicleta actualizada'
+                });
+            }
+        }
     });
 }
 
 bicicletacontroller.delete = async (req, res) => {
-    const {
-        id
-    } = req.params;
-    const bicicleta = {
-        estado: false
-    }
-    await bicicleta.findByIdAndUpdate(id, {
-        $set: bicicleta
-    });
+    const { id } = req.params;
+    await bicicleta.findByIdAndUpdate(id, { $set: { estado: false }});
     res.status(200).json({
-        status: 'Bicicleta eliminada'
+        mensaje: 'Bicicleta eliminada'
     });
 }
 
