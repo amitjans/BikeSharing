@@ -1,11 +1,10 @@
-const Estacion = require('../models/estacion');
-const bicicleta = require('../models/bicicleta');
+const estacion = require('../models/estacion');
 const jwt = require('jsonwebtoken');
 const haversine = require('../common/haversine');
 const estacioncontroller = {};
 
 estacioncontroller.getList = async (req, res) => {
-    const estaciones = await Estacion.find();
+    const estaciones = await estacion.find({ estado: true });
     var list = new Array;
     estaciones.forEach(function (element) {
         list.push({
@@ -16,7 +15,7 @@ estacioncontroller.getList = async (req, res) => {
             direccion: element.direccion,
             lon: element.lon,
             lat: element.lat,
-            distancia: (!!req.query.lon && !!req.query.lat) ? haversine.formula(req.query.lon, element.lon, req.query.lat, element.lat) : 0,
+            distancia: ((!!req.query.lon && !!req.query.lat) ? haversine.formula(req.query.lon, element.lon, req.query.lat, element.lat) : 0) + ' km',
             url: '/api/estacion/' + element._id
         });
     });
@@ -24,19 +23,23 @@ estacioncontroller.getList = async (req, res) => {
 }
 
 estacioncontroller.details = async (req, res) => {
-    const estacion = await Estacion.findById(req.params.id);
-    var cant = await bicicleta.find({ id_estacion: req.params.id });
+    const obj = await estacion.findById(req.params.id);
     res.json({
-        estado: estacion.estado,
-        _id: estacion._id,
-        nombre: estacion.nombre,
-        bicicletas: cant.length,
-        muelles: estacion.muelles,
-        direccion: estacion.direccion,
-        lon: estacion.lon,
-        lat: estacion.lat,
-        url_bici: '/api/bicicleta?estacion=' + estacion._id
+        estado: obj.estado,
+        _id: obj._id,
+        nombre: obj.nombre,
+        bicicletas: obj.bicicletas.length,
+        muelles: obj.muelles,
+        direccion: obj.direccion,
+        lon: obj.lon,
+        lat: obj.lat,
+        url_bici: '/api/bicicleta?estacion=' + obj._id
     });
+}
+
+estacioncontroller.bicicletas = async (req, res) => {
+    var temp = await estacion.findById(req.params.id).populate('bicicletas');
+    res.status(200).json(temp.bicicletas);
 }
 
 estacioncontroller.create = async (req, res) => {
@@ -47,8 +50,8 @@ estacioncontroller.create = async (req, res) => {
             });
         } else {
             if (data.usuario.rol === 'admin') {
-                const estacion = new Estacion(req.body);
-                await estacion.save().then((result) => {
+                const obj = new estacion(req.body);
+                await obj.save().then((result) => {
                     res.status(200).json({
                         status: 'Estacion guardada'
                     });
@@ -69,24 +72,17 @@ estacioncontroller.create = async (req, res) => {
 
 estacioncontroller.edit = async (req, res) => {
     const { id } = req.params;
-    await Estacion.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+    await estacion.findByIdAndUpdate(id, { $set: req.body }, { new: true });
     res.json({
-        status: 'Estacion actualizada'
+        status: 'estacion actualizada'
     });
 }
 
 estacioncontroller.delete = async (req, res) => {
-    const {
-        id
-    } = req.params;
-    const estacion = {
-        estado: false
-    }
-    await Estacion.findByIdAndUpdate(id, {
-        $set: estacion
-    });
+    const { id } = req.params;
+    await estacion.findByIdAndUpdate(id, { estado: false });
     res.json({
-        status: 'Estacion eliminada'
+        mensaje: 'Estacion eliminada'
     });
 }
 

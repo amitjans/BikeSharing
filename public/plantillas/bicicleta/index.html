@@ -1,0 +1,99 @@
+<div class="container" ng-controller="directores">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bgm-bluegray">
+                    <h2>Listado de Bicicletas <small></small></h2>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table" id="data-table-basic">
+                        <thead>
+                            <tr>
+                                <th>N&uacute;mero</th>
+                                <th>Tipo</th>
+                                <th>Tama&ntilde;o</th>
+                                <th>Cantidad de recorridos</th>
+                                <th>Estaci&oacute;n</th>
+                                <th colspan="2">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="l in listado">
+                                <td>{{ l.numero }}</td>
+                                <td>{{ l.tipo.tipo }}</td>
+                                <td>{{ l.tamano }}</td>
+                                <td>{{ l.recorridos.length }}</td>
+                                <td>{{ l.estacion.nombre }}</td>
+                                <td><span class="btn btn-default" ng-click="update(l)"><i class="zmdi zmdi-edit"></i></span></td>
+                                <td><span class="btn btn-default" ng-click="delete(l._id)"><i class="zmdi zmdi-delete"></i></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card z-depth-1">
+                <div class="form-horizontal" role="form">
+                    <div class="card-header bgm-bluegray">
+                        <h2>{{ accion }} bicicletas <small></small></h2>
+                    </div>
+                    <div class="card-body card-padding">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">N&uacute;mero</label>
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    <input type="number" class="form-control input-sm" ng-model="numero"
+                                        placeholder="Numero">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">N&uacute;mero</label>
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    <input type="number" class="form-control input-sm" ng-model="tamano"
+                                        placeholder="Tamano">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Tipo</label>
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="tipo">
+                                            <option ng-repeat="i in listtipo" value="{{ i._id }}" >{{ i.tipo }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Estaci&oacute;n</label>
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="estacion">
+                                            <option ng-repeat="i in listestacion" value="{{ i._id }}" >{{ i.nombre }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" ng-show="icon" class="btn btn-primary btn-sm" ng-click="create()">Guardar</button>
+                                <button type="button" ng-show="!icon" class="btn btn-primary btn-sm" ng-click="updatesend()">Actualizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

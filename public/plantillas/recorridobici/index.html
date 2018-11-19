@@ -1,0 +1,83 @@
+<div class="container" ng-controller="recorridobicis">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bgm-bluegray">
+                    <h2>Recorridos <small></small></h2>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table" id="data-table-basic">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>N&uacute;mero de bicicleta</th>
+                                <th>Estaci&oacute;n de salida</th>
+                                <th>Estaci&oacute;n de llegada</th>
+                                <th>Salida</th>
+                                <th>Llegada</th>
+                                <th>Costo</th>
+                                <th colspan="2">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="l in listado">
+                                <td>{{ l.usuario.correo }}</td>
+                                <td>{{ l.bicicleta.numero }}</td>
+                                <td>{{ l.partida.nombre }}</td>
+                                <td>{{ l.arribo.nombre }}</td>
+                                <td>{{ l.momento_partida }}</td>
+                                <td>{{ l.momento_arrivo }}</td>
+                                <td>{{ l.costo }}</td>
+                                <td><span class="btn btn-default" ng-click="update(l)"><i class="zmdi zmdi-edit"></i></span></td>
+                                <td><span class="btn btn-default" ng-click="delete(l._id)"><i class="zmdi zmdi-delete"></i></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card z-depth-1">
+                <div class="form-horizontal" role="form">
+                    <div class="card-header bgm-bluegray">
+                        <h2>{{ accion }} recorrido <small></small></h2>
+                    </div>
+                    <div class="card-body card-padding">
+                        <div ng-show="icon" class="form-group">
+                            <label class="col-sm-2 control-label">Bicicletas</label>
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="bicicleta">
+                                            <option ng-repeat="i in listbicis" value="{{ i._id }}" >{{ i.numero }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-show="!icon" class="form-group">
+                            <label class="col-sm-2 control-label">Estaci&oacute;n</label>
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="estacion">
+                                            <option ng-repeat="i in listestacion" value="{{ i._id }}" >{{ i.nombre }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" ng-show="icon" class="btn btn-primary btn-sm" ng-click="create()">Guardar</button>
+                                <button type="button" ng-show="!icon" class="btn btn-primary btn-sm" ng-click="updatesend()">Actualizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

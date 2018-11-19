@@ -6,8 +6,8 @@ const EstacionSchema = new Schema({
     direccion: { type: String, require: true },
     lon: { type: Number, required: true },
     lat: { type: Number, required: true },
-    estado: { type: Boolean, default: true }
-
+    estado: { type: Boolean, default: true },
+    bicicletas: [{ type: Schema.Types.ObjectId, ref: 'bicicleta' }]
 });
 
 module.exports = mongoose.model('estacion', EstacionSchema);

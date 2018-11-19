@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const BicitaxiSchema = new Schema({
-    id_usuario: { type: String, required: true },
+    usuario: { type: Schema.Types.ObjectId, ref: 'usuario' },
     chofer: { type: String, required: true },
     capacidad: { type: Number, required: true },
     disponible: { type: Boolean, default: false },
