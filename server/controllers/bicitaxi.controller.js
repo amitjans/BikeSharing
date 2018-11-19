@@ -1,16 +1,11 @@
 const bicitaxi = require('../models/bicitaxi');
+const usuario = require('../models/usuario');
 const jwt = require('jsonwebtoken');
 const bicitaxicontroller = {};
 
-bicitaxicontroller.getList = async (req, res) => {
-    const bicitaxis = await bicitaxi.find();
-    res.status(200).json(bicitaxis);
-}
+bicitaxicontroller.getList = async (req, res) => res.status(200).json(await bicitaxi.find({ estado: true }).populate('usuario'));
 
-bicitaxicontroller.details = async (req, res) => {
-    const bicitaxi = await bicitaxi.findById(req.params.id);
-    res.status(200).json(bicitaxi);
-}
+bicitaxicontroller.details = async (req, res) => res.status(200).json(await bicitaxi.findById(req.params.id));
 
 bicitaxicontroller.create = async (req, res) => {
     jwt.verify(req.token, 'secret_key', async (err, data) => {
@@ -19,22 +14,24 @@ bicitaxicontroller.create = async (req, res) => {
                 error: err
             });
         } else {
-            if (data.usuario.rol === 'admin') {
+            var usuarioaux = await usuario.findById(data.usuario._id);
+            console.log();
+            if(usuarioaux.bicitaxi !== null){
+                res.status(409).json({
+                    mensaje: 'Esta usuario ya posee un bicitaxi'
+                });
+            } else {
                 const nuevobicitaxi = new bicitaxi(req.body);
-                nuevobicitaxi.id_usuario = data.usuario._id
+                nuevobicitaxi.usuario = data.usuario._id
                 await nuevobicitaxi.save().then((result) => {
-                    res.status(200).json({
-                        status: 'Estacion guardada'
+                    res.status(201).json({
+                        status: 'Bicitaxi guardado'
                     });
                 }).catch((err) => {
                     res.status(500).json({
                         status: 'Error interno',
-                        error: err
+                        error: err.menssage
                     });
-                });
-            } else {
-                res.status(403).json({
-                    error: 'Usuario no autorizado a realizar este cambio'
                 });
             }
         }
@@ -49,7 +46,7 @@ bicitaxicontroller.edit = async (req, res) => {
             });
         } else {
             var temp = await bicitaxi.findById(req.params.id);
-            if (data.usuario.rol === 'admin' || data.usuario._id === temp.id_usuario) {
+            if (data.usuario.rol === 'admin' || data.usuario._id === temp.usuario) {
                     const { id } = req.params;
                     await bicitaxi.findByIdAndUpdate(id, { $set: req.body }, { new: true }).then((result) => {
                     res.status(200).json({
@@ -72,12 +69,9 @@ bicitaxicontroller.edit = async (req, res) => {
 
 bicitaxicontroller.delete = async (req, res) => {
     const { id } = req.params;
-    const bicitaxi = {
-        estado: false
-    }
-    await bicitaxi.findByIdAndUpdate(id, { $set: bicitaxi });
+    await bicitaxi.findByIdAndUpdate(id, { $set: { estado: false } });
     res.status(200).json({
-        status: 'Bicitaxi eliminado'
+        mensaje: 'Bicitaxi eliminado'
     });
 }
 

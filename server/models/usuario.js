@@ -5,7 +5,8 @@ const UsuarioSchema = new Schema({
     contrasena: { type: String, required: true },
     rol: { type: Schema.Types.ObjectId, ref: 'rol' },
     bicitaxi: { type: Schema.Types.ObjectId, ref: 'bicitaxi' },
-    recorridobicis: [{ type: Schema.Types.ObjectId, ref: 'recorridobici' }]
+    recorridobicis: [{ type: Schema.Types.ObjectId, ref: 'recorridobici' }],
+    viajes: [{ type: Schema.Types.ObjectId, ref: 'viaje' }]
 });
 
 module.exports = mongoose.model('usuario', UsuarioSchema);

@@ -27,6 +27,9 @@ movies.config(['$locationProvider', '$routeProvider',
         when('/roles', {
             templateUrl: '/plantillas/rol/index.html',
         }).
+        when('/viajes', {
+            templateUrl: '/plantillas/viaje/index.html',
+        }).
         otherwise('/inicio');
     }
 ]);
@@ -35,13 +38,13 @@ $(function() {
     $(".profile-info").empty();
     $(".profile-info").append('Bienvenido ' + (!!localStorage.getItem('usuario') ? localStorage.getItem('usuario') : '') + '<i class="zmdi zmdi-arrow-drop-down"></i>');
 
-    var map;
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
-        zoom: 8
-      });
-    }
+    // var map;
+    // function initMap() {
+    //   map = new google.maps.Map(document.getElementById('map'), {
+    //     center: {lat: -34.397, lng: 150.644},
+    //     zoom: 8
+    //   });
+    // }
 });
 
 function logoout() {

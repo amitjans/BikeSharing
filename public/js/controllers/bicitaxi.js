@@ -1,28 +1,30 @@
-movies.controller('roles', ['$scope', '$http', function ($scope, $http) {
-    $scope.list = [];
+movies.controller('bicitaxis', ['$scope', '$http', function ($scope, $http) {
+    $scope.listbicitaxis = [];
     $scope.accion = 'Agregar';
     $scope.icon = true;
     $scope.updateid;
     $http.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');    
 
     $scope.list = function () {
-      $http.get('/api/roles').then(function successCallback(response) {
-        $scope.listroles = response.data;
+      $http.get('/api/bicitaxis').then(function successCallback(response) {
+        $scope.listbicitaxis = response.data;
       }, function errorCallback(response) {
-        console.log(response.data.err);
       });
     }
 
     $scope.create = function () {
-      $http.post('/api/roles', '{ "descripcion": "' + $scope.descripcion + '" }').then(function successCallback(response) {
-        $scope.descripcion = '';
+      $http.post('/api/bicitaxis', '{ "chofer": "' + $scope.chofer + '", "capacidad": ' + $scope.capacidad + ' }').then(function successCallback(response) {
+        $scope.chofer = '';
+        $scope.capacidad = '';
         $scope.list();
       }, function errorCallback(response) {
+        notify(response.data.mensaje);
       });
     }
 
     $scope.update = function (l) {
-      $scope.descripcion = l.descripcion;
+      $scope.chofer = l.chofer;
+      $scope.capacidad = l.capacidad;
       $scope.updateid = l._id;
       $scope.icon = false;
       $scope.accion = 'Editar';
@@ -30,18 +32,19 @@ movies.controller('roles', ['$scope', '$http', function ($scope, $http) {
     }
 
     $scope.updatesend = function () {
-      $http.put('/api/roles/' + $scope.updateid, '{ "descripcion": "' + $scope.descripcion + '" }').then(function successCallback(response) {
+      $http.put('/api/bicitaxis/' + $scope.updateid, '{ "chofer": "' + $scope.chofer + '", "capacidad": ' + $scope.capacidad + ' }').then(function successCallback(response) {
         $scope.updateid = '';
         $scope.accion = 'Agregar';
         $scope.icon = true;
-        $scope.descripcion = '';
+        $scope.chofer = '';
+        $scope.capacidad = '';
         $scope.list();
       }, function errorCallback(response) {
       });
     }
 
     $scope.delete = function (id) {
-      $http.delete('/api/roles/' + id).then(function successCallback(response) {
+      $http.delete('/api/bicitaxis/' + id).then(function successCallback(response) {
         notify(response.data.mensaje);
         $scope.list();
         up();
