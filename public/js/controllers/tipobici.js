@@ -6,7 +6,6 @@ movies.controller('tipobicis', ['$scope', '$http', function ($scope, $http) {
     $http.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');    
 
     $scope.list = function () {
-      console.log($http.defaults.headers.common['Authorization']);
       $http.get('/api/tipobicis').then(function successCallback(response) {
         $scope.listtipobicis = response.data;
       }, function errorCallback(response) {
