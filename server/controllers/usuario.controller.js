@@ -1,9 +1,10 @@
 const usuario = require('../models/usuario');
+const rol = require('../models/rol');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const usuariocontroller = {};
 
-usuariocontroller.singup = (req, res) => {
+usuariocontroller.singup = async (req, res) => {
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(req.body.contrasena, salt, async function (err, hash) {
             if (err) {
@@ -16,7 +17,7 @@ usuariocontroller.singup = (req, res) => {
                     contrasena: hash
                 });
                 await user.save();
-                res.status(200).json({
+                res.status(201).json({
                     status: 'Usuario guardado'
                 });
             }
@@ -24,24 +25,22 @@ usuariocontroller.singup = (req, res) => {
     });
 }
 
-usuariocontroller.singin = (req, res) => {
-    usuario.findOne({ correo: req.body.correo }, function (err, usuario) {
-        if (err) {
-            res.status(500).json({
-                status: err
-            });
-        } else if(usuario === null) {
-            res.status(200).json({
-                status: 'Usuario invalido'
-            });
-        } else {
-            bcrypt.compare(req.body.contrasena, usuario.contrasena, function (err, result) {
+usuariocontroller.singin = async (req, res) => {
+    var temp = await usuario.findOne({ correo: req.body.correo }).populate('rol').then((result) => {
+        if (result !== null) {
+            var tempuser = result;
+            bcrypt.compare(req.body.contrasena, tempuser.contrasena, function (err, result) {
                 if (result) {
                     const token = jwt.sign({
-                        usuario
+                        usuario: {
+                            id: tempuser._id,
+                            correo: tempuser.correo,
+                            rol: (!!tempuser.rol) ? tempuser.rol.descripcion : ''
+                        }
                     }, 'secret_key');
                     res.status(200).json({
                         status: true,
+                        correo: req.body.correo,
                         menssage: 'Usuario Autenticado',
                         token: token,
                         details: 'Usuario Autenticado Correctamente'
@@ -49,35 +48,56 @@ usuariocontroller.singin = (req, res) => {
                 } else {
                     res.status(403).json({
                         status: false,
-                        menssage: 'Credenciales incorrectas',
+                        mensaje: 'Credenciales incorrectas',
                         token: '',
                         details: err
                     });
                 }
             });
+        } else {
+            res.status(403).json({
+                status: false,
+                mensaje: 'Usuario no encontrado',
+                token: '',
+                details: err
+            });
         }
+    }).catch((err) => {
+        res.status(500).json({
+            status: 'Error interno',
+            error: err.mensaje
+        });
     });
 }
 
-usuariocontroller.getList = (req, res) => {
+usuariocontroller.getList = async (req, res) => {
     jwt.verify(req.token, 'secret_key', async (err, data) => {
         if (err) {
             res.status(403).json({
                 error: err
             });
         } else {
-            const usuarios = await usuario.find();
             var list = new Array;
-            usuarios.forEach(function(element) {
-                list.push({
-                    id: element.id,
-                    correo: element.correo,
-                    rol: element.rol,
-                    puntos: element.puntos,
-                    url: '/api/usuario/' + element.id
+            
+            if(data.usuario.rol === 'admin'){
+                var usuarios = await usuario.find().populate('rol');
+                usuarios.forEach(function(element) {
+                    list.push({
+                        _id: element._id,
+                        correo: element.correo,
+                        rol: (!!element.rol) ? element.rol.descripcion : ''
+                    });
                 });
-            });
-            res.json(list);
+                res.json(list);
+            } else {
+                var usuarios = await usuario.findById(data.usuario.id).populate('rol');
+                list.push({
+                    _id: usuarios._id,
+                    correo: usuarios.correo,
+                    rol: (!!usuarios.rol) ? usuarios.rol.descripcion : ''
+                });
+                res.json(list);
+            }
         }
     });
 }
@@ -86,7 +106,7 @@ usuariocontroller.details = async (req, res) => {
     const user = await usuario.findById(req.params.id);
     res.json({
         correo: user.correo,
-        rol: user.rol,
+        rol: user.rol.descripcion,
         puntos: user.puntos
     });
 }
@@ -96,18 +116,14 @@ usuariocontroller.edit = (req, res) => {
         if (err) {
             res.status(403).json({ error: err });
         } else {
-            if (data.usuario.rol === 'admin' || data.id === req.params.id) {
+            if (data.usuario.rol === 'admin' || data.usuario.id === req.params.id) {
                 const { id } = req.params;
-                await usuario.findByIdAndUpdate(id, { $set: req.body }, { new: true }).then((result) => {
-                    res.status(200).json({
-                        status: 'Usuario actualizado'
-                    }); 
-                }).catch((err) => {
-                    res.status(500).json({
-                        status: 'Error interno',
-                        error: err
-                    });
-                });
+                var temprol = await rol.findById(req.body.rol);
+                var act = await usuario.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+                temprol.usuarios.push(act);
+                temprol.save();
+                res.status(200).json();
+
             } else {
                 res.status(403).json({
                     error: 'Usuario no autorizado a realizar este cambio'

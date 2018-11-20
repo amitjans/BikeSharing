@@ -2,7 +2,21 @@ const rol = require('../models/rol');
 const jwt = require('jsonwebtoken');
 const rolcontroller = {};
 
-rolcontroller.getList = async (req, res) => res.status(200).json(await rol.find({ estado: true }));
+rolcontroller.getList = async (req, res) => {
+    jwt.verify(req.token, 'secret_key', async (err, data) => {
+        if (err) {
+            res.status(403).json({
+                error: err.mensage
+            });
+        } else {
+            if (data.usuario.rol === 'admin') {
+                res.json(await rol.find({ estado: true }));
+            } else {
+                res.json(new Array);
+            }
+        }
+    });
+}
 
 rolcontroller.details = async (req, res) => res.status(200).json(await rol.findById(req.params.id));
 
@@ -15,7 +29,7 @@ rolcontroller.create = async (req, res) => {
                 error: err.mensage
             });
         } else {
-            if (!!data.usuario.rol && data.usuario.rol === 'admin') {
+            if (data.usuario.rol === 'admin') {
                 const obj = new rol(req.body);
                 await obj.save().then((result) => {
                     res.status(201).json({

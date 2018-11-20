@@ -18,7 +18,7 @@ viajecontroller.create = async (req, res) => {
             var distance = 0;
             request.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + req.body.lonini + "," + req.body.latini + "&destinations=" + req.body.lonfin + "," + req.body.latfin + "&key=AIzaSyAc8GUTX5ayyuMbjp04sYebvuvsecabiFc", (error, response, body) => {
                 if(error) {
-                    haversine.formula(req.body.lonini, req.body.lonfin, req.body.latini, req.body.latfin)
+                    distance = haversine.formula(req.body.lonini, req.body.lonfin, req.body.latini, req.body.latfin);
                 } console.dir(JSON.parse(body));
             });
 
