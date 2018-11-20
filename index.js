@@ -28,6 +28,7 @@ app.use('/api/bicitaxis', require('./server/routes/bicitaxi.routes'));
 app.use('/api/recorridobicis', require('./server/routes/recorridobici.routes'));
 app.use('/api/usuarios', require('./server/routes/usuario.routes'));
 app.use('/api/roles', require('./server/routes/rol.routes'));
+app.use('/api/viajes', require('./server/routes/viaje.routes'));
 
 //Servidor
 app.listen(app.get('port'), () => {

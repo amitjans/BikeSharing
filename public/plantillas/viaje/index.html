@@ -3,31 +3,36 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header bgm-bluegray">
-                    <h2>Listado de Estaci&oacute;nes <small></small></h2>
+                    <h2>Listado de Viajes <small></small></h2>
                 </div>
                 <div class="card-body table-responsive">
                     <table class="table" id="data-table-basic">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Muelles</th>
-                                <th>Direcci&oacute;n</th>
+                                <th rowspan="2">Usuario</th>
+                                <th rowspan="2">Nombre</th>
+                                <th colspan="2" style="text-align:center">Origen</th>
+                                <th colspan="2" style="text-align:center">Destino</th>
+                                <th rowspan="2">Distacia (km)</th>
+                                <th rowspan="2" colspan="2">Opciones</th>
+                            </tr>
+                            <tr>
                                 <th>Longitud</th>
                                 <th>Latitud</th>
-                                <th>Distacia</th>
-                                <th colspan="2">Opciones</th>
+                                <th>Longitud</th>
+                                <th>Latitud</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="l in listado">
-                                <td>{{ l.nombre }}</td>
-                                <td>{{ l.muelles }}</td>
-                                <td>{{ l.direccion }}</td>
-                                <td>{{ l.lon }}</td>
-                                <td>{{ l.lat }}</td>
+                                <td>{{ l.usuario.correo }}</td>
+                                <td>{{ l.bicitaxi.chofer }}</td>
+                                <td>{{ l.lonini }}</td>
+                                <td>{{ l.latini }}</td>
+                                <td>{{ l.lonfin }}</td>
+                                <td>{{ l.latfin }}</td>
                                 <td>{{ l.distancia }}</td>
-                                <td><span class="btn btn-default" ng-click="update(l)"><i class="zmdi zmdi-edit"></i></span></td>
-                                <td><span class="btn btn-default" ng-click="delete(l._id)"><i class="zmdi zmdi-delete"></i></span></td>
+                                <td><span ng-show="!!l.bicitaxi" class="zmdi zmdi-check-all"></span><span ng-show="!l.bicitaxi" class="btn btn-default" ng-click="update(l)"><i class="zmdi zmdi-check"></i></span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -38,60 +43,48 @@
             <div class="card z-depth-1">
                 <div class="form-horizontal" role="form">
                     <div class="card-header bgm-bluegray">
-                        <h2>{{ accion }} estaci&oacute;n <small></small></h2>
+                        <h2>{{ accion }} viaje <small></small></h2>
                     </div>
                     <div class="card-body card-padding">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Nombre</label>
+                            <label class="col-sm-2 control-label">Longitud Inicial</label>
                             <div class="col-sm-10">
                                 <div class="fg-line">
-                                    <input type="text" class="form-control input-sm" ng-model="nombre"
-                                        placeholder="Nombre">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Muelles</label>
-                            <div class="col-sm-10">
-                                <div class="fg-line">
-                                    <input type="number" class="form-control input-sm" ng-model="muelles"
+                                    <input type="number" class="form-control input-sm" ng-model="lonini"
                                         placeholder="Numero de muelles">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Direcci&oacute;n</label>
+                            <label class="col-sm-2 control-label">Latitud Inicial</label>
                             <div class="col-sm-10">
                                 <div class="fg-line">
-                                    <input type="text" class="form-control input-sm" ng-model="direccion"
-                                        placeholder="Direccion">
+                                    <input type="number" class="form-control input-sm" ng-model="latini"
+                                        placeholder="Numero de muelles">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Longitud</label>
+                            <label class="col-sm-2 control-label">Longitud Final</label>
                             <div class="col-sm-10">
                                 <div class="fg-line">
-                                    <input type="text" class="form-control input-sm" ng-model="lon"
-                                        placeholder="Longitud">
+                                    <input type="number" class="form-control input-sm" ng-model="lonfin"
+                                        placeholder="Numero de muelles">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Latitud</label>
+                            <label class="col-sm-2 control-label">Latitud Final</label>
                             <div class="col-sm-10">
                                 <div class="fg-line">
-                                    <input type="text" class="form-control input-sm" ng-model="lat"
-                                        placeholder="Latitud">
+                                    <input type="number" class="form-control input-sm" ng-model="latfin"
+                                        placeholder="Numero de muelles">
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <div id="map" style="width: 500px; height: 500px;"></div> -->
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">

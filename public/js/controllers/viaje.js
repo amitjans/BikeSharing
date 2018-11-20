@@ -13,27 +13,22 @@ movies.controller('viajes', ['$scope', '$http', function ($scope, $http) {
     }
 
     $scope.create = function () {
-      var json = '{ "nombre": "' + $scope.nombre + '", "muelles": "' + $scope.muelles + '", "direccion": "' + $scope.direccion + '","lon": "' + $scope.lon + '", "lat": "' + $scope.lat + '" }';
+      var json = '{ "lonini": ' + $scope.lonini + ', "latini": ' + $scope.latini + ', "lonfin": ' + $scope.lonfin + ',"latfin": ' + $scope.latfin + ' }';
       $http.post('/api/viajes', json).then(function successCallback(response) {
-        $scope.nombre = '';
-        $scope.muelles = '';
-        $scope.direccion = '';
-        $scope.lon = '';
-        $scope.lat = '';
+        $scope.lonini = '';
+        $scope.lonfin = '';
+        $scope.latini = '';
+        $scope.latfin = '';
         $scope.list();
       }, function errorCallback(response) {
       });
     }
 
     $scope.update = function (l) {
-      $scope.nombre = l.nombre;
-      $scope.muelles = l.muelles;
-      $scope.direccion = l.direccion;
-      $scope.lon = l.lon;
-      $scope.lat = l.lat;
-      $scope.updateid = l._id;
-      $scope.icon = false;
-      $scope.accion = 'Editar';
+      $http.put('/api/viajes/' + l._id, '{ "estado": true }').then(function successCallback(response) {
+        $scope.list();
+      }, function errorCallback(response) {
+      });
       up();
     }
 

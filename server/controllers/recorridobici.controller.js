@@ -22,7 +22,7 @@ recorridobicicontroller.create = async (req, res) => {
             });
         } else {
             var bici = await bicicleta.findByIdAndUpdate(req.body.bicicleta, { $set: { rentada: true } }, { new: true });
-            obj.usuario = data.usuario._id;
+            obj.usuario = data.usuario.id;
             obj.partida = bici.estacion;
             await obj.save();
             bici.recorridos.push(obj);
