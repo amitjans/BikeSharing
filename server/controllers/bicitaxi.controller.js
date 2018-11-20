@@ -14,26 +14,35 @@ bicitaxicontroller.create = async (req, res) => {
                 error: err
             });
         } else {
-            var usuarioaux = await usuario.findById(data.usuario._id);
-            console.log();
-            if(usuarioaux.bicitaxi !== null){
-                res.status(409).json({
-                    mensaje: 'Esta usuario ya posee un bicitaxi'
-                });
-            } else {
-                const nuevobicitaxi = new bicitaxi(req.body);
-                nuevobicitaxi.usuario = data.usuario._id
-                await nuevobicitaxi.save().then((result) => {
-                    res.status(201).json({
-                        status: 'Bicitaxi guardado'
+            await usuario.findById(data.usuario.id).populate('bicitaxi').then(async (result) => {
+                var user = result;
+                if (!!result.bicitaxi) {
+                    res.status(409).json({
+                        mensaje: 'Esta usuario ya posee un bicitaxi'
                     });
-                }).catch((err) => {
-                    res.status(500).json({
-                        status: 'Error interno',
-                        error: err.menssage
+                } else {
+                    const nuevobicitaxi = new bicitaxi(req.body);
+                    nuevobicitaxi.usuario = data.usuario.id
+                    await nuevobicitaxi.save().then((result) => {
+                        user.bicitaxi = result;
+                        user.save();
+                        res.status(201).json({
+                            status: 'Bicitaxi guardado'
+                        });
+                    }).catch((err) => {
+                        console.log(err.menssage);
+                        res.status(500).json({
+                            status: 'Error interno',
+                            error: err.menssage
+                        });
                     });
+                }
+            }).catch((err) => {
+                res.status(500).json({
+                    status: 'Error interno',
+                    error: err.mensage
                 });
-            }
+            });
         }
     });
 }
@@ -46,7 +55,7 @@ bicitaxicontroller.edit = async (req, res) => {
             });
         } else {
             var temp = await bicitaxi.findById(req.params.id);
-            if (data.usuario.rol === 'admin' || data.usuario._id === temp.usuario) {
+            if (data.usuario.rol === 'admin' || data.usuario.id === temp.usuario) {
                     const { id } = req.params;
                     await bicitaxi.findByIdAndUpdate(id, { $set: req.body }, { new: true }).then((result) => {
                     res.status(200).json({
