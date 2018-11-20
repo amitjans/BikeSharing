@@ -6,6 +6,9 @@ movies.config(['$locationProvider', '$routeProvider',
         when('/inicio', {
             templateUrl: '/plantillas/inicio.html'
         }).
+        when('/login', {
+            templateUrl: '/plantillas/usuario/login.html',
+        }).
         when('/usuarios', {
             templateUrl: '/plantillas/usuario/index.html',
         }).
