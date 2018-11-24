@@ -17,18 +17,19 @@
   <link href="/css/normalize.min.css" rel="stylesheet" />
   <link href="/css/app.min.css" rel="stylesheet" />
   <link href="/css/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
   <style>
-    .profile-pic > img {
-            border-color: #000000 !important;
-            border-color: rgba(0, 0, 0, 0) !important;
-        }
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
+    .map {
+      height: 100%;
+      width: 100%;
+    }
+  .profile-pic > img {
+          border-color: #000000 !important;
+          border-color: rgba(0, 0, 0, 0) !important;
       }
-
-    </style>
+    /* Always set the map height explicitly to define the size of the div
+      * element that contains the map. */
+  </style>
 </head>
 <!-- onkeydown="return false" -->
 <body oncontextmenu="return false" ng-app="movies">
@@ -130,6 +131,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular-route.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc8GUTX5ayyuMbjp04sYebvuvsecabiFc&callback=initMap" async defer></script>
+  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/controllers/rol.js"></script>
   <script src="/js/controllers/tipobici.js"></script>

@@ -6,7 +6,7 @@ $scope.option = '0';
     if($scope.contrasena !== $scope.contrasena2 && !!$scope.contrasena){
       notify('Las contraseñas no coinciden');
     } else {
-      $http.post('/api/usuarios/singup', '{ "correo": "' + $scope.correo + '", "contrasena": "' + $scope.contrasena + '" }').then(function successCallback(response) {
+      $http.post('/api/usuarios/signup', '{ "correo": "' + $scope.correo + '", "contrasena": "' + $scope.contrasena + '" }').then(function successCallback(response) {
         notify('El usuario ha sido creado');
       }, function errorCallback(response) {
         notify(response.data.mensaje);
@@ -15,7 +15,7 @@ $scope.option = '0';
   }
 
   $scope.singin = function () {
-    $http.post('/api/usuarios/singin', '{ "correo": "' + $scope.correo + '", "contrasena": "' + $scope.contrasena + '" }').then(function successCallback(response) {
+    $http.post('/api/usuarios/signin', '{ "correo": "' + $scope.correo + '", "contrasena": "' + $scope.contrasena + '" }').then(function successCallback(response) {
       localStorage.setItem('usuario', response.data.correo);
       localStorage.setItem('token', response.data.token);
       $(".profile-info").empty();

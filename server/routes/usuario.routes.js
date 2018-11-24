@@ -4,8 +4,8 @@ const jwtoken = require('../common/token');
 
 const usuario = require('../controllers/usuario.controller');
 
-router.post('/singin', usuario.singin);
-router.post('/singup', usuario.singup);
+router.post('/signin', usuario.singin);
+router.post('/signup', usuario.singup);
 router.get('/', jwtoken.ensureToken, usuario.getList);
 router.get('/:id', jwtoken.ensureToken, usuario.details);
 router.put('/:id', jwtoken.ensureToken, usuario.edit);
