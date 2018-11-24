@@ -43,6 +43,7 @@ estacioncontroller.bicicletas = async (req, res) => {
 }
 
 estacioncontroller.create = async (req, res) => {
+    console.log(req.body);
     jwt.verify(req.token, 'secret_key', async (err, data) => {
         if (err) {
             res.status(403).json({
@@ -56,6 +57,7 @@ estacioncontroller.create = async (req, res) => {
                         status: 'Estacion guardada'
                     });
                 }).catch((err) => {
+                    console.log(err.menssage);
                     res.status(500).json({
                         status: 'Error interno',
                         error: err

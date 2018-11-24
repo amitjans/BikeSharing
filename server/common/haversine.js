@@ -3,7 +3,7 @@ const haversine = {};
 /**
  * @argument lon1 Longitud del punto inicial
  * @argument lat1 Latitud del punto inicial
- * @argument lon2 Latitud del punto final
+ * @argument lon2 Longitud del punto final
  * @argument lat2 Latitud del punto final
  */
 haversine.formula = (lon1, lon2, lat1, lat2) => {

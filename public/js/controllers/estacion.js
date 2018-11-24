@@ -13,6 +13,9 @@ movies.controller('estaciones', ['$scope', '$http', function ($scope, $http) {
     }
 
     $scope.create = function () {
+      $scope.lon = $("#lon").val();
+      $scope.lat = $("#lat").val();
+      $scope.direccion = $("#direccion").val();
       var json = '{ "nombre": "' + $scope.nombre + '", "muelles": "' + $scope.muelles + '", "direccion": "' + $scope.direccion + '","lon": "' + $scope.lon + '", "lat": "' + $scope.lat + '" }';
       $http.post('/api/estaciones', json).then(function successCallback(response) {
         $scope.nombre = '';
@@ -64,4 +67,27 @@ movies.controller('estaciones', ['$scope', '$http', function ($scope, $http) {
     }
 
     $scope.list();
+
+    var map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([-116.6066175699234, 31.86013937939049]),
+        zoom: 15
+      })
+    });
+    map.on('click', function(evt) {
+      var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+      $("#lon").val(lonlat[0]);
+      $("#lat").val(lonlat[1]);
+      $.ajax({
+        url: "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lonlat[1] + "&lon=" + lonlat[0] + "&zoom=18&addressdetails=1"
+      }).done(function(data) {
+        $("#direccion").val(data.display_name);
+      });      
+  });
   }]);
